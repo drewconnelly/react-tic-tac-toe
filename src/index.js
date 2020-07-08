@@ -90,6 +90,7 @@ class Game extends React.Component {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
+        const hasSpace = hasOpenSpaces(current.squares);
         const moves = history.map((step, move) => {
             const desc = move ? 
                 'Go to move #' + move + ' ' + step.value +' @ (' + step.col + ', ' + step.row + ')':
@@ -100,11 +101,16 @@ class Game extends React.Component {
                 </li>
             );
         });
+        
         let status;
         if (winner) {
             status = 'Winner: ' + winner;
         } else {
-            status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            if (hasSpace) {
+                status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
+            } else {
+                status = 'Draw!  Play again!';
+            }
         }
 
         return (
@@ -130,6 +136,18 @@ class Game extends React.Component {
     document.getElementById('root')
   );
   
+    function hasOpenSpaces(squares) {
+        var hasSpace = false;
+        
+        squares.forEach(function(item) {
+            if (!item) {
+                hasSpace = true;
+            }
+        });
+        
+        return hasSpace;
+    }
+
   function calculateWinner(squares) {
     const lines = [
       [0, 1, 2],
